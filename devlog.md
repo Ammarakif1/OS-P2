@@ -21,3 +21,32 @@ Customer 40 [Door]: entering
 Teller 1 [Customer 28]: completes transaction
 where teller is not even doing the right oder of actions
 
+11/11/2025 
+Was able to fix the order in wich the outputs we coming out now the output is looking like this 
+Teller 0 [—]: ready to serve
+Teller 1 [—]: ready to serve
+Teller 2 [—]: ready to serve
+Teller 2 [—]: bank is now open
+Customer 1 [—]: arrival wait 4ms start
+Customer 2 [—]: arrival wait 3ms start
+Customer 3 [—]: arrival wait 46ms start
+Customer 4 [—]: arrival wait 59ms start
+Customer 5 [—]: arrival wait 40ms start
+Customer 6 [—]: arrival wait 48ms start
+Customer 7 [—]: arrival wait 54ms start
+Customer 8 [—]: arrival wait 67ms start
+Customer 9 [—]: arrival wait 21ms start
+Customer 10 [—]: arrival wait 71ms start
+Customer 11 [—]: arrival wait 22ms start
+Customer 12 [—]: arrival wait 30ms start
+Customer 13 [—]: arrival wait 29ms start
+Customer 2 [—]: arrival wait done
+Customer 14 [—]: arrival wait 3ms start
+Customer 2 [Door]: entering
+Customer 15 [—]: arrival wait 22ms start
+Customer 2 [Door]: entered
+Customer 1 [—]: arrival wait done
+Customer 2 [Teller 0]: selects teller
+Customer 1 [Door]: entering
+Customer 2 [Teller 0]: introduces self
+Customer 1 [Door]: entered
