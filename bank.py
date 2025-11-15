@@ -1,3 +1,6 @@
+
+#Bank simulation with threaded tellers and customers
+
 import argparse
 import random
 import time
@@ -28,20 +31,26 @@ class TellerSync:
 
 class Shared:
     def __init__(self, num_tellers: int, total_customers: int):
+        
         self.num_tellers = num_tellers
         self.total_customers = total_customers
+        # Opening n closing coordination
         self.bank_open = Event()
         self.ready_count_lock = Lock()
         self.ready_count = 0
         self.tellers = []
         self.finished_lock = Lock()
         self.customers_finished = 0
+
+        # Resource semaphores
         self.door_sem = Semaphore(2)
         self.manager_sem = Semaphore(1)
         self.safe_sem = Semaphore(2)
+        # Queuetellers and customers
         self.line_lock = Lock()
         self.line_q: "Queue[tuple[int, Semaphore]]" = Queue()
         self.ready_tellers_q: "Queue[int]" = Queue()
+        #  teller rv semaphores
         self.teller_sync: list[TellerSync] = [
             TellerSync(
                 customer_arrived=Semaphore(0),
@@ -62,6 +71,7 @@ class Teller(Thread):
         self.current_customer: int | None = None
 
     def announce_ready(self) -> None:
+        # Consoleloging readiness and help open the bank
         log("Teller", self.tid, "—", "ready to serve")
         with self.shared.ready_count_lock:
             self.shared.ready_count += 1
@@ -72,6 +82,7 @@ class Teller(Thread):
         self.call_next_from_line_if_any()
 
     def call_next_from_line_if_any(self) -> None:
+        # Ping a waiting customer if one is queued
         try:
             if self.shared.line_q.qsize() > 0:
                 cust_id, cust_sem = self.shared.line_q.get_nowait()
@@ -81,6 +92,7 @@ class Teller(Thread):
             pass
 
     def run(self) -> None:
+        #  Wait for customers and process transactions
         self.announce_ready()
         sync = self.shared.teller_sync[self.tid]
         while True:
@@ -134,6 +146,7 @@ class Customer(Thread):
         self.called_sem = Semaphore(0)
 
     def run(self) -> None:
+        #  arrive n interact with teller n exit
         arrival_ms = random.randint(0, 100)
         log("Customer", self.cid, "—", f"arrival wait {arrival_ms}ms start")
         ms_sleep(arrival_ms)
@@ -162,6 +175,7 @@ class Customer(Thread):
         sync.customer_left.release()
 
     def select_or_enqueue(self) -> int:
+        # Choose a ready teller or wait in line
         teller_id: int | None = None
         try:
             teller_id = self.shared.ready_tellers_q.get_nowait()
@@ -180,6 +194,7 @@ class Customer(Thread):
 
 
 def run_simulation(num_customers: int = 50, num_tellers: int = 3, seed: int | None = None) -> None:
+   
     if seed is not None:
         random.seed(seed)
     shared = Shared(num_tellers=num_tellers, total_customers=num_customers)

@@ -50,3 +50,8 @@ Customer 2 [Teller 0]: selects teller
 Customer 1 [Door]: entering
 Customer 2 [Teller 0]: introduces self
 Customer 1 [Door]: entered
+
+
+11/15/25 1pm
+
+added comments to the code as well as link to github into the read me 
